@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">XiaoErLang</string>
+    <string name="create_assignment">Create Assignment</string>
+    <string name="check_assignment">Check Assignment</string>
+    <string name="info_share">BBS</string>
+    <string name="title_activity_create_assignment">CreateAssignmentActivity</string>
+    <string name="ask">问?</string>
+    <string name="answer">答</string>
+    <string name="forget_question">请输入您的问题？</string>
+</resources>
