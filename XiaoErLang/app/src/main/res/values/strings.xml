@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">XiaoErLang</string>
-    <string name="create_assignment">Create Assignment</string>
-    <string name="check_assignment">Check Assignment</string>
+    <string name="app_name">小二郞</string>
+    <string name="create_assignment">创建作业</string>
+    <string name="check_assignment">查看作业</string>
     <string name="info_share">BBS</string>
-    <string name="logout">Logout</string>
+    <string name="logout">注销</string>
     <string name="title_activity_create_assignment">CreateAssignmentActivity</string>
     <string name="ask">问?</string>
     <string name="answer">答</string>
