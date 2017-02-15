@@ -20,8 +20,7 @@ public class MainActivity extends Activity {
     private Button createAssignment;
     private Button share_BBS;
     private Button logout;
-    private final String QUESTION ="Question";
-    private final String ANSWER ="Answer";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +59,7 @@ public class MainActivity extends Activity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.check_assignment:
-                    String email = Util.getSP(getApplicationContext(),Util.email);
-                    if(null != email && email.equals("fenghanlu@gmail.com")){
-                     // teacher
-                    }else{
-                        // student
-                        createAssignment.setVisibility(View.GONE);
                         startHomworkActivity();
-                    }
                     break;
                 case R.id.create_assignment:
                     Intent intent = new Intent(MainActivity.this, CreateAssignmentActivity.class);

@@ -1,27 +1,25 @@
 package com.example.username.xiaoerlang;
 
-        import android.content.Intent;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
-        import com.avos.avoscloud.AVException;
-        import com.avos.avoscloud.AVUser;
-        import com.avos.avoscloud.LogInCallback;
-        import com.avos.avoscloud.SignUpCallback;
-        import com.example.username.xiaoerlang.util.Util;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
+import com.example.username.xiaoerlang.util.Util;
 
-        import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private EditText mUserName;
     private EditText mPassword;
     private Button login;
-
+    private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(null != Util.getSP(getApplicationContext(),Util.email)){
             startActivity();
-            finish();
-//           ? login(Util.getSP(getApplicationContext(),Util.userName),Util.getSP(getApplicationContext(),Util.password));
+            close();
         }
     }
     private void init(){
@@ -41,18 +38,25 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog = Util.showDialog(LoginActivity.this,R.string.wait,R.string.connecting_server);
                 login(mUserName.getText().toString(),mPassword.getText().toString());
             }
         });
 
     }
 
+    private void closeDialog(){
+        if(null != dialog){
+            dialog.dismiss();
+        }
+    }
+
+
     private void login(final String userName, final String password){
         AVUser.logInInBackground(userName, password, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-
-
+                closeDialog();
                 if(e ==null){
                     String email =  avUser.getEmail();
                     Log.i("Login email is: ",email);
@@ -73,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    public void finish(){
+    public void close(){
         this.finish();
     }
 }

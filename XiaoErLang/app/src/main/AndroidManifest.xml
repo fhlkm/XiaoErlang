@@ -31,6 +31,10 @@
         <activity
             android:name=".StudentDoHomeWorkActivity"
             android:label="@string/title_activity_student_do_home_work"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CheckStudentHomeWork"
+            android:label="@string/title_activity_check_student_home_work"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

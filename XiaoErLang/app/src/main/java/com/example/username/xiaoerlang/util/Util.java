@@ -16,6 +16,13 @@ public class Util {
 
     public static String password ="password";
     public static String userName ="username";
+    public static final String QUESTION ="questiontext";
+    public static final String ANSWER ="answer";
+    public static final String USEREMAIL = "email";
+    public static final String STUDENTANSER="studentAnswer";
+    public static final String COMMENT="comment";
+    public static final String questionTableName ="QuestionInfo";
+    public static final String student_questionTableName ="StudentQuestionInfo";
     public static void showToast(Context mContext , String info){
 
         Toast.makeText(mContext, info, Toast.LENGTH_LONG).show();

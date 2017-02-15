@@ -7,9 +7,11 @@
     <string name="title_activity_create_assignment">CreateAssignmentActivity</string>
     <string name="ask">问?</string>
     <string name="answer">答</string>
+    <string name="comment">批注</string>
     <string name="submit">提交</string>
     <string name="forget_question">请输入您的问题？</string>
     <string name="wait">Wait</string>
     <string name="connecting_server">正在连接服务器</string>
     <string name="title_activity_student_do_home_work">StudentDoHomeWorkActivity</string>
+    <string name="title_activity_check_student_home_work">CheckStudentHomeWork</string>
 </resources>
