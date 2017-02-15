@@ -1,20 +1,20 @@
 package com.example.username.xiaoerlang;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+        import android.content.Intent;
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.util.Log;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.EditText;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
-import com.avos.avoscloud.SignUpCallback;
-import com.example.username.xiaoerlang.util.Util;
+        import com.avos.avoscloud.AVException;
+        import com.avos.avoscloud.AVUser;
+        import com.avos.avoscloud.LogInCallback;
+        import com.avos.avoscloud.SignUpCallback;
+        import com.example.username.xiaoerlang.util.Util;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
+        import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(null != Util.getSP(getApplicationContext(),Util.email)){
             startActivity();
+            finish();
 //           ? login(Util.getSP(getApplicationContext(),Util.userName),Util.getSP(getApplicationContext(),Util.password));
         }
     }

@@ -108,8 +108,6 @@ public class CreateAssignmentActivity extends Activity {
 
                         }
                     }
-//                    mList.addAll(list);
-//                    mRecyclerAdapter.notifyDataSetChanged();
                 } else {
                     e.printStackTrace();
                 }

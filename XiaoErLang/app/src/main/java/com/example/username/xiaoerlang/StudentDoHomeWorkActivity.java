@@ -3,7 +3,11 @@ package com.example.username.xiaoerlang;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,6 +28,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVSaveOption;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.example.username.xiaoerlang.data.Question;
@@ -31,12 +36,10 @@ import com.example.username.xiaoerlang.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RunnableFuture;
 
 public class StudentDoHomeWorkActivity extends Activity {
-    private ArrayList <Question>mList = new ArrayList();
-    private ArrayList <Question>mStudentList = new ArrayList();
     private List<AVObject> teacherList = new ArrayList<>();
-    private List<AVObject> studentList = new ArrayList<>();
     private ListView mlistView;
     ListViewAdapter mAdapter;
     private final String QUESTION ="questiontext";
@@ -48,6 +51,7 @@ public class StudentDoHomeWorkActivity extends Activity {
     private final String student_questionTableName ="StudentQuestionInfo";
     private ProgressDialog dialog;
     private Button submit;
+    private List<AVObject> updateList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +68,7 @@ public class StudentDoHomeWorkActivity extends Activity {
         mlistView = (ListView)findViewById(R.id.student_list);
         mAdapter= new ListViewAdapter(this,R.layout.item_assignment);
         mlistView.setAdapter(mAdapter);
-        dialog = Util.showDialog(getApplicationContext(),R.string.wait,R.string.connecting_server);
+        dialog = Util.showDialog(this,R.string.wait,R.string.connecting_server);
     }
     private void closeDialog(){
         if(null != dialog){
@@ -76,78 +80,47 @@ public class StudentDoHomeWorkActivity extends Activity {
         @Override
         public void onClick(View view) {
 
+            dialog.show();
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    closeDialog();
+                    retriveTeacherList();
+                }
+            }, 3000);
+
+            for(AVObject mObject :updateList){
+                mObject.saveInBackground();
+            }
+
         }
     };
 
 
 
-    private void createAssignment(String quesiton,String answer){
-        AVObject testObject = new AVObject(questionTableName);
-        testObject.put(USEREMAIL,Util.getSP(getApplicationContext(),Util.email));
-        testObject.put(QUESTION,quesiton);
-        testObject.put(ANSWER,answer);
-        testObject.put(STUDENTANSER,"");
-        testObject.put(COMMENT,"");
-        testObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if(e == null){
-                    Log.d("saved","success!");
-//                    getAssignemnts();
-
-                }else{
-                    Util.showToast(getApplicationContext(), e.getMessage());
-                }
-            }
-        });
-    }
-
     private void retriveTeacherList(){
-        AVQuery<AVObject> avQuery = new AVQuery<>(student_questionTableName);
+        AVQuery<AVObject> avQuery = new AVQuery<>(questionTableName);
         avQuery.orderByDescending("createdAt");
         avQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
 
-                if (e == null) {
-                    if(null != list && list.size()>0){
-                        teacherList = list;
-                    }
-                } else {
-                    e.printStackTrace();
-                }
-                retrieveStudent();
-            }
-
-        });
-    }
-
-    public void retrieveStudent(){
-        AVQuery<AVObject> avQuery = new AVQuery<>(student_questionTableName);
-        avQuery.orderByDescending("createdAt");
-        avQuery.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
                 closeDialog();
                 if (e == null) {
                     if(null != list && list.size()>0){
-                        studentList = list;
+                        teacherList = list;
+                        mAdapter.notifyDataSetChanged();
                     }
                 } else {
                     e.printStackTrace();
                 }
+//                retrieveStudent();
             }
 
         });
     }
 
-    public void getExtraList(List<AVObject> tList, List<AVObject> sList){
-        List<AVObject> extra = new ArrayList<>();
-        for(AVObject teacher: tList)
-            for(AVObject student:sList){
-                 if(teacher.get())
-            }
-    }
 
 
     private  class ListViewAdapter extends ArrayAdapter<String> {
@@ -169,7 +142,7 @@ public class StudentDoHomeWorkActivity extends Activity {
 
         @Override
         public int getCount() {
-            return mList.size();
+            return teacherList.size();
         }
 
         @NonNull
@@ -187,16 +160,19 @@ public class StudentDoHomeWorkActivity extends Activity {
                 rowView.setTag(mholder);
             }
             ViewHolder holder = (ViewHolder) rowView.getTag();
-            holder.text.setText("问："+mList.get(position).getQuestiontext());
+            final AVObject mObject = teacherList.get(position);
+            holder.text.setText("问："+mObject.get(QUESTION));
             holder.answer.setVisibility(View.GONE);
-            if(null != mList.get(position).getStudentAnswer()){
-                if(mList.get(position).getStudentAnswer().equals(mList.get(position).getAnswer())){
-                    holder.studentAnswer.setText(mList.get(position).getAnswer());
-                    holder.studentAnswer.setEnabled(false);
+            if(null != mObject.get(STUDENTANSER)&&mObject.get(STUDENTANSER).toString().length()>0){
+                holder.studentAnswer.setText(mObject.get(STUDENTANSER).toString());
+                holder.studentAnswer.setEnabled(false);
+                holder.studentAnswer.setVisibility(View.VISIBLE);
+                if(mObject.get(STUDENTANSER).toString().equals(mObject.get(ANSWER).toString())){
+                    holder.studentAnswer.setBackgroundColor(Color.RED);
                 }
             }else{
                 holder.studentAnswer.setVisibility(View.VISIBLE);
-                final int index = position
+                holder.studentAnswer.setText("");
                 holder.studentAnswer.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -210,11 +186,15 @@ public class StudentDoHomeWorkActivity extends Activity {
 
                     @Override
                     public void afterTextChanged(Editable editable) {
-                        mList.get(index).setStudentAnswer(editable.toString());
+                        if(editable.toString().length()>0) {
+                            mObject.put(STUDENTANSER, editable.toString());
+                            if (updateList.indexOf(mObject) == -1) {
+                                updateList.add(mObject);
+                            }
+                        }
                     }
                 });
             }
-//            holder.answer.setText("答："+mList.get(position).getAnswer());
 
             return rowView;
         }

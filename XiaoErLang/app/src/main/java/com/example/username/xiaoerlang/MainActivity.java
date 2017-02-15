@@ -1,5 +1,6 @@
 package com.example.username.xiaoerlang;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.example.username.xiaoerlang.util.Util;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private Button checkAssignment;
     private Button createAssignment;
     private Button share_BBS;
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initUI();
-//        testAVO();
 
     }
 
@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        finish();
+    }
 
     View.OnClickListener mListener = new View.OnClickListener() {
         @Override
@@ -61,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     }else{
                         // student
                         createAssignment.setVisibility(View.GONE);
+                        startHomworkActivity();
                     }
                     break;
                 case R.id.create_assignment:
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.logout:
                     Util.clearSP(getApplicationContext());
+                    startActivity();
                     break;
             }
         }
@@ -78,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    public void startActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void startHomworkActivity(){
+        Intent intent = new Intent(this, StudentDoHomeWorkActivity.class);
+        startActivity(intent);
+    }
 
     private void getAssignment(){
 
