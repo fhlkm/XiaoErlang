@@ -34,6 +34,7 @@
         android:textSize="@dimen/main_font_size"
         android:layout_weight="1"/>
     <Button
+        android:visibility="gone"
         android:id="@+id/share_bbs"
         android:layout_width="@dimen/main_botton_width"
         android:layout_height="@dimen/main_botton_height"
