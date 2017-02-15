@@ -1,6 +1,7 @@
 package com.example.username.xiaoerlang;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,6 +46,9 @@ public class StudentDoHomeWorkActivity extends Activity {
         initUI();
 
         retriveTeacherList();
+        if(Util.getSP(StudentDoHomeWorkActivity.this,Util.email).equals("fenghanlu@gmail.com")){
+            submit.setVisibility(View.GONE);
+        }
     }
 
     public void initUI(){
@@ -65,25 +70,38 @@ public class StudentDoHomeWorkActivity extends Activity {
         @Override
         public void onClick(View view) {
 
-            dialog.show();
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    closeDialog();
-                    retriveTeacherList();
-                }
-            }, 3000);
-
-            for(AVObject mObject :updateList){
-                if(mObject.get(Util.STUDENTANSER)!=null &&mObject.get(Util.STUDENTANSER).toString().length()>0) {
-                    mObject.saveInBackground();
-                }
-            }
-            updateList.clear();
+            action();
 
         }
     };
+
+    public void action(){
+        dialog.show();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                closeDialog();
+                retriveTeacherList();
+            }
+        }, 3000);
+// teacher
+        if(Util.getSP(StudentDoHomeWorkActivity.this,Util.email).equals("fenghanlu@gmail.com")){
+            for (AVObject mObject : updateList) {
+                if (mObject.get(Util.COMMENT) != null && mObject.get(Util.COMMENT).toString().length() > 0) {
+                    mObject.saveInBackground();
+                }
+            }
+        }else {
+            // student
+            for (AVObject mObject : updateList) {
+                if (mObject.get(Util.STUDENTANSER) != null && mObject.get(Util.STUDENTANSER).toString().length() > 0) {
+                    mObject.saveInBackground();
+                }
+            }
+        }
+        updateList.clear();
+    }
 
 
 
@@ -153,6 +171,14 @@ public class StudentDoHomeWorkActivity extends Activity {
             mholder.answer.setVisibility(View.GONE);
             mholder.studentAnswer.setText("");
             mholder.studentAnswer.setBackgroundColor(Color.WHITE);
+            //Comment
+            if(mObject.get(Util.COMMENT).toString()!=null && mObject.get(Util.COMMENT).toString().length()>0){
+                    mholder.comment.setText(mObject.get(Util.COMMENT).toString());
+                    mholder.comment.setVisibility(View.VISIBLE);
+                     mholder.comment.setEnabled(false);
+
+            }
+            //answer
             if(null != mObject.get(Util.STUDENTANSER)&&mObject.get(Util.STUDENTANSER).toString().length()>0){
                 mholder.studentAnswer.setText(mObject.get(Util.STUDENTANSER).toString());
                 mholder.studentAnswer.setEnabled(false);
@@ -161,14 +187,17 @@ public class StudentDoHomeWorkActivity extends Activity {
                     mholder.studentAnswer.setBackgroundColor(Color.RED);
                 }
                 if(Util.getSP(StudentDoHomeWorkActivity.this,Util.email).equals("fenghanlu@gmail.com")){
-                    mholder.studentAnswer.setLongClickable(true);
-                    mholder.studentAnswer.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            mholder.comment.setVisibility(View.VISIBLE);
-                            return true;
-                        }
-                    });
+                   if( mholder.comment.getVisibility() == View.GONE) {
+                        mholder.text.setLongClickable(true);
+                        mholder.text.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+                                mholder.comment.setVisibility(View.VISIBLE);
+                                customerDialog(mObject);
+                                return true;
+                            }
+                        });
+                    }
                 }
 
             }else{
@@ -206,5 +235,29 @@ public class StudentDoHomeWorkActivity extends Activity {
             return rowView;
         }
 
+    }
+
+    public void customerDialog(final AVObject mobject){
+        final Dialog dialog = new Dialog(StudentDoHomeWorkActivity.this);
+        dialog.setContentView(R.layout.custom);
+        dialog.setTitle("批注");
+
+        final EditText mEditText = (EditText) dialog.findViewById(R.id.add_comment);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.add_button);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mobject.put(Util.COMMENT, mEditText.getText().toString());
+                if(updateList.indexOf(mobject) ==-1) {
+                    updateList.add(mobject);
+                }
+                dialog.dismiss();
+                action();
+            }
+        });
+
+        dialog.show();
     }
 }

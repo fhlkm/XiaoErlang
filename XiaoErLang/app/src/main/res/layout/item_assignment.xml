@@ -6,7 +6,7 @@
     <TextView
         android:id="@+id/question"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="@dimen/main_font_size" />
     <TextView
         android:id="@+id/answer"
         android:layout_width="match_parent"
