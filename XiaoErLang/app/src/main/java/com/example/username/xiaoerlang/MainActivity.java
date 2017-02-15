@@ -2,17 +2,23 @@ package com.example.username.xiaoerlang;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
+import com.example.username.xiaoerlang.util.Util;
 
 public class MainActivity extends AppCompatActivity {
     private Button checkAssignment;
     private Button createAssignment;
     private Button share_BBS;
+    private final String QUESTION ="Question";
+    private final String ANSWER ="Answer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +30,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI(){
+
         checkAssignment = (Button)findViewById(R.id.check_assignment);
         createAssignment = (Button)findViewById(R.id.create_assignment);
         share_BBS = (Button)findViewById(R.id.share_bbs);
-        
+
         checkAssignment.setOnClickListener(mListener);
         createAssignment.setOnClickListener(mListener);
         share_BBS.setOnClickListener(mListener);
+        String email = Util.getSP(getApplicationContext(),Util.email);
+        if(email.equals("fenghanlu@gmail.com")){
+
+        }else{
+            createAssignment.setVisibility(View.GONE);
+        }
     }
 
 
@@ -40,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             switch (view.getId()){
                 case R.id.check_assignment:
 //                    testAVO();
-                        break;
+                    break;
                 case R.id.create_assignment:
                     break;
                 case R.id.share_bbs:
@@ -49,6 +62,27 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+    private void createAssignment(String quesiton,String answer){
+        AVObject testObject = new AVObject("Question");
+        testObject.put(QUESTION,quesiton);
+        testObject.put(ANSWER,answer);
+        testObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if(e == null){
+                    Log.d("saved","success!");
+
+                }else{
+                    Util.showToast(getApplicationContext(), e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void getAssignment(){
+        
+    }
     private void testAVO(){
 //        AVUser.logInInBackground("student1", "student1", new LogInCallback<AVUser>() {
 //            @Override
@@ -80,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-         user = new AVUser();// 新建 AVUser 对象实例
+        user = new AVUser();// 新建 AVUser 对象实例
         user.setUsername("student1");// 设置用户名
         user.setPassword("student1");// 设置密码
         user.setEmail("fenghanlu@163.com");// 设置邮箱

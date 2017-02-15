@@ -7,6 +7,8 @@ package com.example.username.xiaoerlang.data;
 public class Question {
     private String text;
     private String answer;
+    private String objectId;
+
 
     public String getAnswer() {
         return answer;
@@ -22,5 +24,13 @@ public class Question {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }
