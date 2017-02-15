@@ -5,10 +5,19 @@ package com.example.username.xiaoerlang.data;
  */
 
 public class Question {
-    private String text;
+    private String questiontext;
     private String answer;
-    private String objectId;
+    private String email;
+    private String studentAnswer;
+    private String comment;
 
+    public String getQuestiontext() {
+        return questiontext;
+    }
+
+    public void setQuestiontext(String questiontext) {
+        this.questiontext = questiontext;
+    }
 
     public String getAnswer() {
         return answer;
@@ -18,19 +27,27 @@ public class Question {
         this.answer = answer;
     }
 
-    public String getText() {
-        return text;
+    public String getEmail() {
+        return email;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getObjectId() {
-        return objectId;
+    public String getStudentAnswer() {
+        return studentAnswer;
     }
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public void setStudentAnswer(String studentAnswer) {
+        this.studentAnswer = studentAnswer;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
