@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Button checkAssignment;
     private Button createAssignment;
     private Button share_BBS;
+    private Button logout;
     private final String QUESTION ="Question";
     private final String ANSWER ="Answer";
 
@@ -35,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
         checkAssignment = (Button)findViewById(R.id.check_assignment);
         createAssignment = (Button)findViewById(R.id.create_assignment);
         share_BBS = (Button)findViewById(R.id.share_bbs);
-
+        logout = (Button)findViewById(R.id.logout);
         checkAssignment.setOnClickListener(mListener);
         createAssignment.setOnClickListener(mListener);
         share_BBS.setOnClickListener(mListener);
         String email = Util.getSP(getApplicationContext(),Util.email);
+        logout.setOnClickListener(mListener);
         if(null != email && email.equals("fenghanlu@gmail.com")){
 
         }else{
@@ -53,13 +55,22 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.check_assignment:
-//                    testAVO();
+                    String email = Util.getSP(getApplicationContext(),Util.email);
+                    if(null != email && email.equals("fenghanlu@gmail.com")){
+                     // teacher
+                    }else{
+                        // student
+                        createAssignment.setVisibility(View.GONE);
+                    }
                     break;
                 case R.id.create_assignment:
                     Intent intent = new Intent(MainActivity.this, CreateAssignmentActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.share_bbs:
+                    break;
+                case R.id.logout:
+                    Util.clearSP(getApplicationContext());
                     break;
             }
         }

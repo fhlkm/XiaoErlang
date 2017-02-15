@@ -42,5 +42,14 @@
         android:textStyle="bold"
         android:textSize="@dimen/main_font_size"
         android:layout_weight="1"/>
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="@dimen/main_botton_width"
+        android:layout_height="@dimen/main_botton_height"
+        android:text="@string/logout"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="@dimen/main_font_size"
+        android:layout_weight="1"/>
 </LinearLayout>
 </RelativeLayout>

@@ -27,7 +27,8 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_above="@id/bottom_layout"
+            android:id="@+id/action"
+            android:layout_alignParentTop="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -42,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="Add"
                     android:gravity="center_horizontal"/>
+
                 <Button
                     android:id="@+id/delete_assignments"
                     android:layout_width="100dp"
@@ -50,14 +52,17 @@
                     android:text="Recycle"/>
             </LinearLayout>
 
-
+        </LinearLayout>
 
             <ListView
+                android:layout_above="@id/bottom_layout"
+                android:layout_below="@id/action"
                 android:id="@+id/assignments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             </ListView>
-        </LinearLayout>
+
+
     </RelativeLayout>
 </LinearLayout>

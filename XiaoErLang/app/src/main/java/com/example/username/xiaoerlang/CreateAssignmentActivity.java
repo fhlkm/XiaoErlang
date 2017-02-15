@@ -1,13 +1,10 @@
 package com.example.username.xiaoerlang;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +22,6 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.example.username.xiaoerlang.data.Question;
 import com.example.username.xiaoerlang.util.Util;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +40,9 @@ public class CreateAssignmentActivity extends Activity {
     private final String USEREMAIL = "email";
     private final String STUDENTANSER="studentAnswer";
     private final String COMMENT="comment";
-    private final String listName ="QuestionInfo";
+    private final String questionTableName ="QuestionInfo";
     ListViewAdapter mAdapter;
+    private  ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +50,10 @@ public class CreateAssignmentActivity extends Activity {
 
         init();
 
-         mAdapter= new ListViewAdapter(CreateAssignmentActivity.this,mList,R.layout.item_assignment);
+        mAdapter= new ListViewAdapter(CreateAssignmentActivity.this,mList,R.layout.item_assignment);
         mListView.setAdapter(mAdapter);
+        dialog = Util.showDialog(this, getResources().getString(R.string.wait),getResources().getString(R.string.connecting_server));
+        getAssignemnts();
     }
 
     private void init(){
@@ -69,13 +68,18 @@ public class CreateAssignmentActivity extends Activity {
 
 
 
-
+    private void closeDialog(){
+        if(null != dialog){
+            dialog.dismiss();
+        }
+    }
 
     View.OnClickListener mListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.create_new_assignment:
+                    dialog =  Util.showDialog(CreateAssignmentActivity.this, getResources().getString(R.string.wait),getResources().getString(R.string.connecting_server));
                     createNewAssignment();
                     break;
                 case R.id.delete_assignments:
@@ -86,18 +90,19 @@ public class CreateAssignmentActivity extends Activity {
         }
     };
     private void getAssignemnts(){
-        AVQuery<AVObject> avQuery = new AVQuery<>(listName);
+        AVQuery<AVObject> avQuery = new AVQuery<>(questionTableName);
         avQuery.orderByDescending("createdAt");
         avQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
+                closeDialog();
                 if (e == null) {
                     if(null != list && list.size()>0){
                         mList.clear();
                         for(AVObject mObject: list) {
                             Question mQuestion = new Question();
                             mQuestion.setAnswer(mObject.get(ANSWER).toString());
-                            mQuestion.setComment(mObject.get(QUESTION).toString());
+                            mQuestion.setQuestiontext(mObject.get(QUESTION).toString());
                             mList.add(mQuestion);
                             mAdapter.notifyDataSetChanged();
 
@@ -121,12 +126,14 @@ public class CreateAssignmentActivity extends Activity {
         if(question.length()>0){
 
             createAssignment(question,answer);
+            mAskInput.setText("");
+            mAnswerInput.setText("");
         }else{
             Util.showToast(getApplicationContext(),R.string.forget_question);
         }
     }
     private void createAssignment(String quesiton,String answer){
-        AVObject testObject = new AVObject(listName);
+        AVObject testObject = new AVObject(questionTableName);
         testObject.put(USEREMAIL,Util.getSP(getApplicationContext(),Util.email));
         testObject.put(QUESTION,quesiton);
         testObject.put(ANSWER,answer);
@@ -146,11 +153,11 @@ public class CreateAssignmentActivity extends Activity {
         });
     }
 
-    private static class ListViewAdapter extends ArrayAdapter<String>{
+    private  class ListViewAdapter extends ArrayAdapter<String>{
         Context mContext;
-        ArrayList<Question> mList = new ArrayList<>();
+        //        ArrayList<Question> mList = new ArrayList<>();
         int layoutResourceId;
-        public static class ViewHolder {
+        public  class ViewHolder {
             public TextView text;
             public TextView answer;
         }
@@ -159,7 +166,12 @@ public class CreateAssignmentActivity extends Activity {
             super(context,layoutResourceId);
             this.mContext = context;
             this.layoutResourceId = layoutResourceId;
-            this.mList = mList;
+//            this.mList = mList;
+        }
+
+        @Override
+        public int getCount() {
+            return mList.size();
         }
 
         @NonNull
@@ -173,11 +185,11 @@ public class CreateAssignmentActivity extends Activity {
                 ViewHolder mholder = new ViewHolder();
                 mholder.text = (TextView)rowView.findViewById(R.id.question);
                 mholder.answer = (TextView)rowView.findViewById(R.id.answer);
-                mholder.text.setText(mList.get(position).getQuestiontext());
-                mholder.answer.setText(mList.get(position).getAnswer());
                 rowView.setTag(mholder);
             }
             ViewHolder holder = (ViewHolder) rowView.getTag();
+            holder.text.setText("问："+mList.get(position).getQuestiontext());
+            holder.answer.setText("答："+mList.get(position).getAnswer());
 
             return rowView;
         }

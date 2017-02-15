@@ -3,8 +3,13 @@
     <string name="create_assignment">Create Assignment</string>
     <string name="check_assignment">Check Assignment</string>
     <string name="info_share">BBS</string>
+    <string name="logout">Logout</string>
     <string name="title_activity_create_assignment">CreateAssignmentActivity</string>
     <string name="ask">问?</string>
     <string name="answer">答</string>
+    <string name="submit">提交</string>
     <string name="forget_question">请输入您的问题？</string>
+    <string name="wait">Wait</string>
+    <string name="connecting_server">正在连接服务器</string>
+    <string name="title_activity_student_do_home_work">StudentDoHomeWorkActivity</string>
 </resources>

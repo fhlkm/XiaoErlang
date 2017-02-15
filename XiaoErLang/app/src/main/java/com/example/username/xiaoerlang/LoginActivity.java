@@ -27,20 +27,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         init();
-//        AVUser user = new AVUser();// 新建 AVUser 对象实例
-//        user.setUsername("teacher");// 设置用户名
-//        user.setPassword("teacher");// 设置密码
-//        user.setEmail("fenghanlu@gmail.com");// 设置邮箱
-//        user.signUpInBackground(new SignUpCallback() {
-//            @Override
-//            public void done(AVException e) {
-//                if (e == null) {
-//                    // 注册成功
-//                } else {
-//                    // 失败的原因可能有多种，常见的是用户名已经存在。
-//                }
-//            }
-//        });
+
+        if(null != Util.getSP(getApplicationContext(),Util.email)){
+            startActivity();
+//           ? login(Util.getSP(getApplicationContext(),Util.userName),Util.getSP(getApplicationContext(),Util.password));
+        }
     }
     private void init(){
         mUserName = (EditText)findViewById(R.id.input_email);
@@ -55,16 +46,21 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void login(String userName,String password){
+    private void login(final String userName, final String password){
         AVUser.logInInBackground(userName, password, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
 
-//                String email =  avUser.getEmail();
-//                Log.i("Login email is: ",email);
+
                 if(e ==null){
-//                    Util.saveSP(getApplicationContext(), Util.email, email);
+                    String email =  avUser.getEmail();
+                    Log.i("Login email is: ",email);
+                    Util.saveSP(getApplicationContext(), Util.email, email);
+                    Util.saveSP(getApplicationContext(), Util.userName, userName);
+                    Util.saveSP(getApplicationContext(), Util.password, password);
                     startActivity();
+                    finish();
+
                 }else{
                     Util.showToast(LoginActivity.this,e.getMessage());
                 }
@@ -75,5 +71,8 @@ public class LoginActivity extends AppCompatActivity {
     public void startActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+    public void finish(){
+        this.finish();
     }
 }

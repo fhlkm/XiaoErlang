@@ -1,8 +1,11 @@
 package com.example.username.xiaoerlang.util;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
+
+import com.example.username.xiaoerlang.R;
 
 /**
  * Created by hanlu.feng on 2/14/2017.
@@ -10,6 +13,9 @@ import android.widget.Toast;
 
 public class Util {
     public static String email ="email";
+
+    public static String password ="password";
+    public static String userName ="username";
     public static void showToast(Context mContext , String info){
 
         Toast.makeText(mContext, info, Toast.LENGTH_LONG).show();
@@ -29,7 +35,25 @@ public class Util {
 
     public static String getSP(Context context,String keyStr){
         SharedPreferences pref = context.getSharedPreferences("MyPref", 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
         return pref.getString(keyStr,null);
+    }
+    public static void clearSP(Context context){
+        SharedPreferences pref = context.getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear().commit();
+    }
+
+    public static ProgressDialog showDialog(Context context,String title,String content) {
+        final ProgressDialog progDailog = ProgressDialog.show(context,
+                title,
+               content , true);
+        return progDailog;
+    }
+
+    public static ProgressDialog showDialog(Context context,int title,int content) {
+        final ProgressDialog progDailog = ProgressDialog.show(context,
+                context.getResources().getString(title),
+                context.getResources().getString(content) , true);
+        return progDailog;
     }
 }
