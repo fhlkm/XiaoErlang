@@ -1,8 +1,5 @@
 package com.example.username.xiaoerlang.data;
 
-/**
- * Created by hanlu.feng on 2/14/2017.
- */
 
 public class Question {
     private String questiontext;

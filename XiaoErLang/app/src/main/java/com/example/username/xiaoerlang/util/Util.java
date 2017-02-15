@@ -7,9 +7,6 @@ import android.widget.Toast;
 
 import com.example.username.xiaoerlang.R;
 
-/**
- * Created by hanlu.feng on 2/14/2017.
- */
 
 public class Util {
     public static String email ="email";

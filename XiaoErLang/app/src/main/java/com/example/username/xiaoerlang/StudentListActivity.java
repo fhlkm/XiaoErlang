@@ -6,10 +6,6 @@ import android.widget.ListView;
 
 import java.util.List;
 
-/**
- * Created by hanlu.feng on 2/14/2017.
- */
-
 public class StudentListActivity extends Activity{
     private ListView mlist ;
     @Override

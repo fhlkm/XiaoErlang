@@ -4,10 +4,6 @@ import android.app.Application;
 
 import com.avos.avoscloud.AVOSCloud;
 
-/**
- * Created by hanlu.feng on 2/14/2017.
- */
-
 public class MyLeanCloudApp  extends Application {
     @Override
     public void onCreate() {
