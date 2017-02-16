@@ -53,6 +53,10 @@ public class LoginActivity extends Activity {
 
 
     private void login(final String userName, final String password){
+        if(!userName.equals("teacher")&& !userName.equals("student1")){
+            Util.showToast(LoginActivity.this,"对不起只允许特定用户登陆");
+            return;
+        }
         AVUser.logInInBackground(userName, password, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
