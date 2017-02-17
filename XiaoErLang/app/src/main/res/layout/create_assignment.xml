@@ -41,7 +41,7 @@
                     android:id="@+id/create_new_assignment"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Add"
+                    android:text="添加"
                     android:gravity="center_horizontal"/>
 
                 <Button

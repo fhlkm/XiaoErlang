@@ -70,7 +70,9 @@ public class MainActivity extends Activity {
                 case R.id.logout:
                     Util.clearSP(getApplicationContext());
                     startActivity();
+                    finish();
                     break;
+
             }
         }
     };
@@ -176,4 +178,5 @@ public class MainActivity extends Activity {
 //            }
 //        });
     }
+
 }

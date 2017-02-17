@@ -84,4 +84,11 @@ public class LoginActivity extends Activity {
     public void close(){
         this.finish();
     }
+    @Override
+    public void onBackPressed() {
+
+        android.os.Process.killProcess(android.os.Process.myPid());
+        // This above line close correctly
+    }
+
 }
